@@ -11,9 +11,9 @@ var antLayer = new PIXI.Container();
 var linkLayer = new PIXI.Container();
 
 app.stage.removeChildren();
+app.stage.addChild(linkLayer);
 app.stage.addChild(nodeLayer);
 app.stage.addChild(antLayer);
-app.stage.addChild(linkLayer);
 
 function getNodeGraphics(r, text) {
     var c = new PIXI.Container();
@@ -29,15 +29,6 @@ function getNodeGraphics(r, text) {
     }
     nodeLayer.addChild(c);
     return c; 
-}
-
-function getAntGraphics(r) {
-    var g = new PIXI.Graphics();
-    g.beginFill(0xFF0000);
-    g.drawCircle(0, 0, r);
-    g.endFill();
-    antLayer.addChild(g);
-    return g;
 }
 
 function getLinkGraphics(x1, y1, x2, y2) {
@@ -58,30 +49,6 @@ function Node(id, x, y, text) {
     this.neighbors = [];
 }
 
-function Ant(start) {
-    this.radius = 5;
-    this.graphics = getAntGraphics(this.radius);
-    this.graphics.x = start.graphics.x;
-    this.graphics.y = start.graphics.y;
-    this.target = null;
-    this.path = [start];
-    this.wayBack = false;
-    this.update = function() {
-        var tx = this.target.graphics.x;
-        var ty = this.target.graphics.y;
-        if (this.graphics.x > tx - 1 &&
-            this.graphics.x < tx + 1 &&
-            this.graphics.y > ty - 1 &&
-            this.graphics.y < ty + 1) {
-            return true;
-        }
-        var vx = tx - this.graphics.x;
-        var vy = ty - this.graphics.y;
-        this.graphics.x += vx/(Math.abs(vx) + Math.abs(vy));
-        this.graphics.y += vy/(Math.abs(vx) + Math.abs(vy));
-        return false;
-    };
-}
 
 function linkNode(nodeA, nodeB) {
     nodeA.neighbors.push(nodeB);
@@ -90,12 +57,9 @@ function linkNode(nodeA, nodeB) {
 }
 
 function defineTarget(ant) {
-    var s = 0;
-    do {
-        var n = Math.floor(Math.random() * ant.target.neighbors.length);
-        var target = ant.target.neighbors[n];
-        s++;
-    } while(ant.target.id >= target.id && s < 50);
+    var n = Math.floor(Math.random() * ant.target.neighbors.length);
+    var target = ant.target.neighbors[n];
+    
     ant.target = target;
     ant.path.push(target);
 }
@@ -148,12 +112,10 @@ var d = new Date();
 var timer = d.getTime();
 
 ants.push(new Ant(start));
-ants[0].target = start;
 window.setInterval(function createAnt() {
-        var a = new Ant(start);
-        a.target = start;
-        ants.push(a);
-    }, 2000);
+    var a = new Ant(start);
+    ants.push(a);
+}, 2000);
     
 function updateEnvironment() {
     ants.forEach(function(ant) {
