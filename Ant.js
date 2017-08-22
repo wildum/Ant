@@ -1,5 +1,3 @@
-'esversion: 6';
-
 const ANT_RADIUS = 5;
 const ANT_COLOR = 0xFF0000;
 
