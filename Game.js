@@ -45,13 +45,17 @@ function updateEnvironment() {
             // Define direction
             if (ant.wayBack && !ant.path.length) {
                 ant.wayBack = false;
+
+                ant.graphics.tint = ANT_COLOR;
             } else if (!ant.wayBack && ant.target.id == end.id) {
                 ant.wayBack = true;
+                ant.graphics.tint = 0xFFFF00;
+
             }
 
             // Define new target
             if (ant.wayBack) {
-                ant.target = ant.path.pop();
+                ant.selectReturnTarget(ant);
             } else {
                 ant.selectNextTarget(ant);
             }

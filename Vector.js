@@ -37,4 +37,10 @@ class Vector {
         }
         return this;
     }
+
+    multiplyScalar(scalar) {
+        this.x *= scalar;
+        this.y *= scalar;
+        return this;
+    }
 }
