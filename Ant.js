@@ -41,12 +41,12 @@ class Ant {
             this.x = this.target.graphics.x;
             this.y = this.target.graphics.y;
         } else {
-        var vx = this.target.graphics.x - this.x;
-        var vy = this.target.graphics.y - this.y;
+            var vx = this.target.graphics.x - this.x;
+            var vy = this.target.graphics.y - this.y;
 
-        var speed = new Vector(vx, vy).normalize();
-        this.x += speed.x;
-        this.y += speed.y;
+            var speed = new Vector(vx, vy).normalize();
+            this.x += speed.x;
+            this.y += speed.y;
 
         }
     }
