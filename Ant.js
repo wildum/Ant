@@ -21,7 +21,6 @@ class Ant {
         this.target = start;
         this.path = [start];
         this.wayBack = false;
-        this.state = STATE_IDLE;
     }
 
     set x(v) { this.graphics.x = v; }
