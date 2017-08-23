@@ -1,8 +1,3 @@
-// States
-const STATE_IDLE = 0;
-const STATE_MOVING = 0;
-const STATE_RETURNING = 0;
-
 const ANT_RADIUS = 5;
 const ANT_COLOR = 0xFF0000;
 
