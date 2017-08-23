@@ -37,17 +37,24 @@ class Ant {
             throw new Exception("/!\\ not supposed to happen (design flaw?)");
         }
 
-        if (Vector.squareDist(this, this.target.graphics) <= 1) {
-            this.x = this.target.graphics.x;
-            this.y = this.target.graphics.y;
+        if (Vector.squareDist(this, this.target) <= 1) {
+            this.x = this.target.x;
+            this.y = this.target.y;
         } else {
-            var vx = this.target.graphics.x - this.x;
-            var vy = this.target.graphics.y - this.y;
+            var vx = this.target.x - this.x;
+            var vy = this.target.y - this.y;
 
             var speed = new Vector(vx, vy).normalize();
             this.x += speed.x;
             this.y += speed.y;
-
         }
     }
+
+    selectNextTarget() {
+        var n = Math.floor(Math.random() * this.target.neighbors.length);
+        var target = this.target.neighbors[n];
+        this.target = target;
+        this.path.push(target);
+    }
+
 }

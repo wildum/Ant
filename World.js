@@ -7,6 +7,12 @@ class Node {
         this.graphics.y = y;
         this.neighbors = [];
     }
+
+
+    set x(v) { this.graphics.x = v; }
+    get x() { return this.graphics.x; }
+    set y(v) { this.graphics.y = v; }
+    get y() { return this.graphics.y; }
 }
 
 function getNodeGraphics(r, text) {
@@ -76,7 +82,7 @@ class World {
         linkNode(nodes[7], nodes[8]);
         linkNode(nodes[7], nodes[9]);
         linkNode(nodes[8], nodes[9]);
-        
+
         this.nodes = nodes;
     }
 }
