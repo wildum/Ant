@@ -33,12 +33,12 @@ var d = new Date();
 var timer = d.getTime();
 
 ants.push(new Ant(start));
-/*
+
 window.setInterval(function createAnt() {
     var a = new Ant(start);
     ants.push(a);
 }, 2000);
-*/
+
 function updateEnvironment() {
     ants.forEach(function (ant) {
         ant.move();
