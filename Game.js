@@ -34,9 +34,13 @@ var timer = d.getTime();
 
 ants.push(new Ant(start));
 
-window.setInterval(function createAnt() {
+
+var interval = window.setInterval(function createAnt() {
     var a = new Ant(start);
     ants.push(a);
+    if (ants.length > 100) {
+        clearInterval(interval);
+    }
 }, 2000);
 
 function updateEnvironment() {
@@ -44,9 +48,12 @@ function updateEnvironment() {
         ant.move();
         if (ant.isAtTarget()) {
             // Define direction
-            if (ant.wayBack && !ant.path.length) {
-                ant.wayBack = false;
-                ant.graphics.tint = ANT_COLOR;
+            if (ant.wayBack) {
+                ant.placePheromone();
+                if (!ant.path.length) {
+                    ant.wayBack = false;
+                    ant.graphics.tint = ANT_COLOR;
+                }
             } else if (!ant.wayBack) {
                 ant.updatePath();
                 if (ant.target.id == end.id) {
@@ -62,6 +69,7 @@ function updateEnvironment() {
             }
         }
     });
+    graph.links.forEach(link => link.decayPheromone());
 }
 
 function animate() {

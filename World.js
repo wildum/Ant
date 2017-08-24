@@ -34,17 +34,42 @@ function getNodeGraphics(r, text) {
 
 function getLinkGraphics(x1, y1, x2, y2) {
     var g = new PIXI.Graphics();
-    g.lineStyle(2, 0);
+    g.lineStyle(2, 0x0);
     g.moveTo(x1, y1);
     g.lineTo(x2, y2);
+
     linkLayer.addChild(g);
+
     return g;
 }
 
-function linkNode(nodeA, nodeB) {
-    nodeA.neighbors.push(nodeB);
-    nodeB.neighbors.push(nodeA);
-    nodeB.linkTo[nodeA.id] = nodeA.linkTo[nodeB.id] = new Link(nodeA, nodeB);
+function lerpColor(start, end, amount) {
+    var from = {
+        r: (start & 0xFF0000) >> 16,
+        g: (start & 0x00FF00) >> 8,
+        b: (start & 0x0000FF)
+    };
+    var to = {
+        r: (end & 0xFF0000) >> 16,
+        g: (end & 0x00FF00) >> 8,
+        b: (end & 0x0000FF)
+    };
+    var result = {
+        r: lerp(from.r, to.r, amount) << 16,
+        g: lerp(from.g, to.g, amount) << 8,
+        b: lerp(from.b, to.b, amount)
+    };
+    return result.r | result.g | result.b;
+}
+/**
+ * Gets the number from [a;b] at percentage u
+ */
+function lerp(a, b, u) {
+  if (a <= b) {
+    return a + (b - a) * u;
+  } else {
+    return b + (a - b) * (1 - u);
+  }
 }
 
 class Link {
@@ -52,6 +77,7 @@ class Link {
         this.nodeA = nodeA;
         this.nodeB = nodeB;
         this.graphics = getLinkGraphics(nodeA.x, nodeA.y, nodeB.x, nodeB.y);
+        this.pheromones = 0;
     }
 
     getOther(node) {
@@ -59,15 +85,29 @@ class Link {
             return this.nodeB;
         if (node === this.nodeB)
             return this.nodeA;
-        
+
         throw "Exception: The given node isn't attached to this link";
+    }
+
+    placePheromone(strength) {
+        this.pheromones += strength;
+        this.pheromones = Math.min(1, this.pheromones);
+    }
+
+    decayPheromone() {
+        this.pheromones = this.pheromones * (1 - PHEROMONE_DECAY_RATE);
+        var g = this.graphics;
+        g.clear();
+        g.lineStyle(2, lerpColor(0x0, 0xFFFFFF, this.pheromones));
+        g.moveTo(this.nodeA.x, this.nodeA.y);
+        g.lineTo(this.nodeB.x, this.nodeB.y);
     }
 }
 
 class World {
     constructor() {
         var nodes = [];
-        var links = [];
+        this.links = [];
 
         //add nodes
         nodes.push(new Node(0, 30, 224, 'S'));
@@ -82,24 +122,33 @@ class World {
         nodes.push(new Node(9, 948, 224, 'E'));
 
         //link nodes
-        linkNode(nodes[0], nodes[1]);
-        linkNode(nodes[0], nodes[3]);
-        linkNode(nodes[1], nodes[3]);
-        linkNode(nodes[1], nodes[2]);
-        linkNode(nodes[2], nodes[3]);
-        linkNode(nodes[3], nodes[4]);
-        linkNode(nodes[2], nodes[5]);
-        linkNode(nodes[3], nodes[5]);
-        linkNode(nodes[4], nodes[5]);
-        linkNode(nodes[4], nodes[6]);
-        linkNode(nodes[5], nodes[6]);
-        linkNode(nodes[6], nodes[7]);
-        linkNode(nodes[5], nodes[7]);
-        linkNode(nodes[6], nodes[8]);
-        linkNode(nodes[7], nodes[8]);
-        linkNode(nodes[7], nodes[9]);
-        linkNode(nodes[8], nodes[9]);
+        this.linkNode(nodes[0], nodes[1]);
+        this.linkNode(nodes[0], nodes[3]);
+        this.linkNode(nodes[1], nodes[3]);
+        this.linkNode(nodes[1], nodes[2]);
+        this.linkNode(nodes[2], nodes[3]);
+        this.linkNode(nodes[3], nodes[4]);
+        this.linkNode(nodes[2], nodes[5]);
+        this.linkNode(nodes[3], nodes[5]);
+        this.linkNode(nodes[4], nodes[5]);
+        this.linkNode(nodes[4], nodes[6]);
+        this.linkNode(nodes[5], nodes[6]);
+        this.linkNode(nodes[6], nodes[7]);
+        this.linkNode(nodes[5], nodes[7]);
+        this.linkNode(nodes[6], nodes[8]);
+        this.linkNode(nodes[7], nodes[8]);
+        this.linkNode(nodes[7], nodes[9]);
+        this.linkNode(nodes[8], nodes[9]);
 
         this.nodes = nodes;
+    }
+
+    linkNode(nodeA, nodeB) {
+        var link = new Link(nodeA, nodeB);
+
+        nodeA.neighbors.push(nodeB);
+        nodeB.neighbors.push(nodeA);
+        nodeB.linkTo[nodeA.id] = nodeA.linkTo[nodeB.id] = link;
+        this.links.push(link);
     }
 }
