@@ -2,6 +2,9 @@ const ANT_RADIUS = 5;
 const ANT_COLOR = 0xFF0000;
 const ANT_SPEED = 4;
 
+const PHEROMONE_STRENGTH = 0.5;
+const PHEROMONE_DECAY_RATE = 1.2e-2;
+
 function getAntGraphics(r) {
     var g = new PIXI.Graphics();
     g.beginFill(0xFFFFFF);
@@ -68,24 +71,41 @@ class Ant {
         }
     }
 
-    selectNextTarget() {
-        var neighbors = this.target.neighbors;
+    weightedChoice(cumulative) {
+        var x = Math.random();
+        for (var i = 0; i < cumulative.length; ++i) {
+            if (x < cumulative[i]) {
+                return i;
+            }
+        }
+    }
 
-        if (neighbors.length > 1) {
-            neighbors = neighbors.filter(n => this.target.linkTo[n.id] !== this.getPreviousLink());
+    selectNextTarget() {
+        var PHEREMON_IMPORTANCE = 0.8;
+        var links = Object.values(this.target.linkTo);
+
+        if (links.length > 1) {
+            links = links.filter(l => l !== this.getPreviousLink());
         }
 
-        var n = Math.floor(Math.random() * neighbors.length);
-        var next = neighbors[n];
-        this.targetLink = this.target.linkTo[next.id];
-        this.target = next;
-
+        var weights = [];
+        var sum = 0;
+        for (var link of links) {
+            var w = (1 - PHEREMON_IMPORTANCE) + (PHEREMON_IMPORTANCE * link.pheromones);
+            weights.push(w);
+            sum += w;
+        }
+        weights = weights.map(w => w / sum);
+        var cumulative = weights.reduce((sum, v) => sum.concat(v + (sum[sum.length - 1] || 0)), []);
+        var idx = this.weightedChoice(cumulative);
+        this.targetLink = links[idx];
+        this.target = this.targetLink.getOther(this.target);
     }
 
     selectReturnTarget() {
         var best = null;
         var minIndex = -1;
-        
+
         for (var nodeId in this.target.linkTo) {
             var link = this.target.linkTo[nodeId];
             var idx = this.path.indexOf(link);
@@ -96,11 +116,16 @@ class Ant {
         }
         if (best !== null) {
             this.target = best.getOther(this.target);
+            this.targetLink = best;
             this.path.splice(minIndex);
         } else {
             //This ant lost the way home!
         }
 
+    }
+
+    placePheromone() {
+        this.targetLink.placePheromone(PHEROMONE_STRENGTH);
     }
 
 }
