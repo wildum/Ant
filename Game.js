@@ -33,11 +33,12 @@ var d = new Date();
 var timer = d.getTime();
 
 ants.push(new Ant(start));
+/*
 window.setInterval(function createAnt() {
     var a = new Ant(start);
     ants.push(a);
 }, 2000);
-
+*/
 function updateEnvironment() {
     ants.forEach(function (ant) {
         ant.move();
@@ -45,14 +46,14 @@ function updateEnvironment() {
             // Define direction
             if (ant.wayBack && !ant.path.length) {
                 ant.wayBack = false;
-
                 ant.graphics.tint = ANT_COLOR;
-            } else if (!ant.wayBack && ant.target.id == end.id) {
-                ant.wayBack = true;
-                ant.graphics.tint = 0xFFFF00;
-
+            } else if (!ant.wayBack) {
+                ant.updatePath();
+                if (ant.target.id == end.id) {
+                    ant.wayBack = true;
+                    ant.graphics.tint = 0xFFFF00;
+                }
             }
-
             // Define new target
             if (ant.wayBack) {
                 ant.selectReturnTarget(ant);
