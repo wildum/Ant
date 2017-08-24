@@ -38,7 +38,7 @@ ants.push(new Ant(start));
 var interval = window.setInterval(function createAnt() {
     var a = new Ant(start);
     ants.push(a);
-    if (ants.length > 100) {
+    if (ants.length > 10000) {
         clearInterval(interval);
     }
 }, 2000);

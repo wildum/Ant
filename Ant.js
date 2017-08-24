@@ -1,9 +1,9 @@
-const ANT_RADIUS = 5;
-const ANT_COLOR = 0xFF0000;
-const ANT_SPEED = 4;
+var ANT_RADIUS = 5;
+var ANT_COLOR = 0xFF0000;
+var ANT_SPEED = 4;
 
-const PHEROMONE_STRENGTH = 0.5;
-const PHEROMONE_DECAY_RATE = 1.2e-2;
+var PHEROMONE_STRENGTH = 0.5;
+var PHEROMONE_DECAY_RATE = 1.2e-3;
 
 function getAntGraphics(r) {
     var g = new PIXI.Graphics();
@@ -81,7 +81,6 @@ class Ant {
     }
 
     selectNextTarget() {
-        var PHEREMON_IMPORTANCE = 0.8;
         var links = Object.values(this.target.linkTo);
 
         if (links.length > 1) {
@@ -91,7 +90,7 @@ class Ant {
         var weights = [];
         var sum = 0;
         for (var link of links) {
-            var w = (1 - PHEREMON_IMPORTANCE) + (PHEREMON_IMPORTANCE * link.pheromones);
+            var w = 1 + link.pheromones;
             weights.push(w);
             sum += w;
         }

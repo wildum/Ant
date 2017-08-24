@@ -90,7 +90,8 @@ class Link {
     }
 
     placePheromone(strength) {
-        this.pheromones += strength;
+        this.pheromones = lerp(this.pheromones, 1, strength);
+        // this.pheromones += strength;
         this.pheromones = Math.min(1, this.pheromones);
     }
 
