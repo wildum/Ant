@@ -6,7 +6,14 @@ class Node {
         this.graphics.x = x;
         this.graphics.y = y;
         this.neighbors = [];
+        this.linkTo = {};
     }
+
+
+    set x(v) { this.graphics.x = v; }
+    get x() { return this.graphics.x; }
+    set y(v) { this.graphics.y = v; }
+    get y() { return this.graphics.y; }
 }
 
 function getNodeGraphics(r, text) {
@@ -29,7 +36,7 @@ function getLinkGraphics(x1, y1, x2, y2) {
     var g = new PIXI.Graphics();
     g.lineStyle(2, 0);
     g.moveTo(x1, y1);
-    g.lineTo(x2, y2)
+    g.lineTo(x2, y2);
     linkLayer.addChild(g);
     return g;
 }
@@ -37,14 +44,30 @@ function getLinkGraphics(x1, y1, x2, y2) {
 function linkNode(nodeA, nodeB) {
     nodeA.neighbors.push(nodeB);
     nodeB.neighbors.push(nodeA);
-    getLinkGraphics(nodeA.graphics.x, nodeA.graphics.y, nodeB.graphics.x, nodeB.graphics.y);
+    nodeB.linkTo[nodeA.id] = nodeA.linkTo[nodeB.id] = new Link(nodeA, nodeB);
 }
 
+class Link {
+    constructor(nodeA, nodeB) {
+        this.nodeA = nodeA;
+        this.nodeB = nodeB;
+        this.graphics = getLinkGraphics(nodeA.x, nodeA.y, nodeB.x, nodeB.y);
+    }
 
+    getOther(node) {
+        if (node === this.nodeA)
+            return this.nodeB;
+        if (node === this.nodeB)
+            return this.nodeA;
+        
+        throw "Exception: The given node isn't attached to this link";
+    }
+}
 
 class World {
     constructor() {
         var nodes = [];
+        var links = [];
 
         //add nodes
         nodes.push(new Node(0, 30, 224, 'S'));
@@ -76,7 +99,7 @@ class World {
         linkNode(nodes[7], nodes[8]);
         linkNode(nodes[7], nodes[9]);
         linkNode(nodes[8], nodes[9]);
-        
+
         this.nodes = nodes;
     }
 }

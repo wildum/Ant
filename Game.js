@@ -15,15 +15,6 @@ app.stage.addChild(linkLayer);
 app.stage.addChild(nodeLayer);
 app.stage.addChild(antLayer);
 
-//TODO: should be in Ant class
-function defineTarget(ant) {
-    var n = Math.floor(Math.random() * ant.target.neighbors.length);
-    var target = ant.target.neighbors[n];
-
-    ant.target = target;
-    ant.path.push(target);
-}
-
 var ants = [];
 
 app.stage.hitArea = new PIXI.Rectangle(0, 0, app.screen.width, app.screen.height);
@@ -42,6 +33,7 @@ var d = new Date();
 var timer = d.getTime();
 
 ants.push(new Ant(start));
+
 window.setInterval(function createAnt() {
     var a = new Ant(start);
     ants.push(a);
@@ -54,15 +46,19 @@ function updateEnvironment() {
             // Define direction
             if (ant.wayBack && !ant.path.length) {
                 ant.wayBack = false;
-            } else if (!ant.wayBack && ant.target.id == end.id) {
-                ant.wayBack = true;
+                ant.graphics.tint = ANT_COLOR;
+            } else if (!ant.wayBack) {
+                ant.updatePath();
+                if (ant.target.id == end.id) {
+                    ant.wayBack = true;
+                    ant.graphics.tint = 0xFFFF00;
+                }
             }
-
             // Define new target
             if (ant.wayBack) {
-                ant.target = ant.path.pop();
+                ant.selectReturnTarget(ant);
             } else {
-                defineTarget(ant);
+                ant.selectNextTarget(ant);
             }
         }
     });
