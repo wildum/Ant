@@ -6,7 +6,7 @@ class Node {
     constructor(x, y, text) {
         this.id = nextNodeId++;
         this.radius = NODE_RADIUS;
-        this.graphics = getNodeGraphics(this.radius, text || '');
+        this.graphics = getNodeGraphics(this.radius, text || this.id.toString());
         this.graphics.x = x;
         this.graphics.y = y;
         this.neighbors = [];
@@ -109,46 +109,69 @@ class Link {
 
 class World {
     constructor() {
-        var nodes = [];
+        this.nodes = [];
         this.links = [];
 
-        //add nodes
-        nodes.push(new Node(30, 224, 'S'));
-        nodes.push(new Node(100, 300, ''));
-        nodes.push(new Node(200, 356, ''));
-        nodes.push(new Node(222, 169, ''));
-        nodes.push(new Node(398, 178, ''));
-        nodes.push(new Node(400, 300, ''));
-        nodes.push(new Node(567, 178, ''));
-        nodes.push(new Node(700, 250, ''));
-        nodes.push(new Node(867, 178, ''));
-        nodes.push(new Node(948, 224, 'E'));
+        if (localStorage.world) {
+            this.parse(localStorage.world);
+        } else {
+            var nodes = this.nodes;
+            //add nodes
+            nodes.push(new Node(30, 224, 'S'));
+            nodes.push(new Node(100, 300, ''));
+            nodes.push(new Node(200, 356, ''));
+            nodes.push(new Node(222, 169, ''));
+            nodes.push(new Node(398, 178, ''));
+            nodes.push(new Node(400, 300, ''));
+            nodes.push(new Node(567, 178, ''));
+            nodes.push(new Node(700, 250, ''));
+            nodes.push(new Node(867, 178, ''));
+            nodes.push(new Node(948, 224, 'E'));
 
-        //link nodes
-        this.linkNode(nodes[0], nodes[1]);
-        this.linkNode(nodes[0], nodes[3]);
-        this.linkNode(nodes[1], nodes[3]);
-        this.linkNode(nodes[1], nodes[2]);
-        this.linkNode(nodes[2], nodes[3]);
-        this.linkNode(nodes[3], nodes[4]);
-        this.linkNode(nodes[2], nodes[5]);
-        this.linkNode(nodes[3], nodes[5]);
-        this.linkNode(nodes[4], nodes[5]);
-        this.linkNode(nodes[4], nodes[6]);
-        this.linkNode(nodes[5], nodes[6]);
-        this.linkNode(nodes[6], nodes[7]);
-        this.linkNode(nodes[5], nodes[7]);
-        this.linkNode(nodes[6], nodes[8]);
-        this.linkNode(nodes[7], nodes[8]);
-        this.linkNode(nodes[7], nodes[9]);
-        this.linkNode(nodes[8], nodes[9]);
+            //link nodes
+            this.linkNode(nodes[0], nodes[1]);
+            this.linkNode(nodes[0], nodes[3]);
+            this.linkNode(nodes[1], nodes[3]);
+            this.linkNode(nodes[1], nodes[2]);
+            this.linkNode(nodes[2], nodes[3]);
+            this.linkNode(nodes[3], nodes[4]);
+            this.linkNode(nodes[2], nodes[5]);
+            this.linkNode(nodes[3], nodes[5]);
+            this.linkNode(nodes[4], nodes[5]);
+            this.linkNode(nodes[4], nodes[6]);
+            this.linkNode(nodes[5], nodes[6]);
+            this.linkNode(nodes[6], nodes[7]);
+            this.linkNode(nodes[5], nodes[7]);
+            this.linkNode(nodes[6], nodes[8]);
+            this.linkNode(nodes[7], nodes[8]);
+            this.linkNode(nodes[7], nodes[9]);
+            this.linkNode(nodes[8], nodes[9]);
+        }
 
-        this.nodes = nodes;
+    }
+
+    parse(world) {
+        var data = JSON.parse(world);
+        for (var i = 0; i < data.nodes.length; ++i) {
+            var n = data.nodes[i];
+            var label = null;
+            if (i === 0) {
+                label = 'S';
+            }
+            if (i === data.nodes.length - 1) {
+                label = 'E';
+            }
+
+            this.nodes.push(new Node(n.x, n.y, label));
+        }
+        for (var link of data.links) {
+            this.linkNode(this.nodes[link.a], this.nodes[link.b]);
+        }
     }
 
     removeNode(node) {
         //Disconnect
-        var isNotNode = (o=>o!==node);
+        var isNotNode = (o => o !== node);
         for (var n of node.neighbors) {
             n.neighbors = n.neighbors.filter(isNotNode);
             delete n.linkTo[node.id];
@@ -181,5 +204,12 @@ class World {
         nodeB.neighbors.push(nodeA);
         nodeB.linkTo[nodeA.id] = nodeA.linkTo[nodeB.id] = link;
         this.links.push(link);
+    }
+
+    toString() {
+        return JSON.stringify({
+            nodes: this.nodes.map(n => ({ x: n.x, y: n.y })),
+            links: this.links.map(l => ({ a: this.nodes.indexOf(l.nodeA), b: this.nodes.indexOf(l.nodeB) }))
+        });
     }
 }

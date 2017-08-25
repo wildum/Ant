@@ -21,7 +21,7 @@ app.stage.rightdown = function (e) {
         graph.removeNode(node);
         draggingFrom = null;
     }
-
+    save();
 };
 
 app.stage.mousedown = function (e) {
@@ -66,4 +66,9 @@ app.stage.mouseup = app.stage.mouseupoutside = function (e) {
         draggingFrom = null;
         drag.clear();
     }
+    save();
 };
+
+function save() {
+    localStorage.world = graph.toString();
+}
