@@ -1,8 +1,11 @@
+var NODE_RADIUS = 15;
+var LINK_WIDTH = 2;
+
 class Node {
     constructor(id, x, y, text) {
         this.id = id;
-        this.radius = 15;
-        this.graphics = getNodeGraphics(this.radius, text);
+        this.radius = NODE_RADIUS;
+        this.graphics = getNodeGraphics(this.radius, text || '');
         this.graphics.x = x;
         this.graphics.y = y;
         this.neighbors = [];
@@ -65,11 +68,11 @@ function lerpColor(start, end, amount) {
  * Gets the number from [a;b] at percentage u
  */
 function lerp(a, b, u) {
-  if (a <= b) {
-    return a + (b - a) * u;
-  } else {
-    return b + (a - b) * (1 - u);
-  }
+    if (a <= b) {
+        return a + (b - a) * u;
+    } else {
+        return b + (a - b) * (1 - u);
+    }
 }
 
 class Link {
@@ -98,7 +101,7 @@ class Link {
         this.pheromones = this.pheromones * (1 - PHEROMONE_DECAY_RATE);
         var g = this.graphics;
         g.clear();
-        g.lineStyle(2, lerpColor(0x0, 0xFFFFFF, this.pheromones));
+        g.lineStyle(LINK_WIDTH, lerpColor(0x0, 0xFFFFFF, this.pheromones));
         g.moveTo(this.nodeA.x, this.nodeA.y);
         g.lineTo(this.nodeB.x, this.nodeB.y);
     }
@@ -121,7 +124,7 @@ class World {
         nodes.push(new Node(8, 867, 178, ''));
         nodes.push(new Node(9, 948, 224, 'E'));
 
-        //link nodes
+        // //link nodes
         this.linkNode(nodes[0], nodes[1]);
         this.linkNode(nodes[0], nodes[3]);
         this.linkNode(nodes[1], nodes[3]);
@@ -140,7 +143,52 @@ class World {
         this.linkNode(nodes[7], nodes[9]);
         this.linkNode(nodes[8], nodes[9]);
 
+        // nodes.push(new Node(0, 30, 224, 'S'));
+        // nodes.push(new Node(1, 180, 227, 1));
+        // nodes.push(new Node(2, 284, 135, 2));
+        // nodes.push(new Node(3, 420, 138, 3));
+        // nodes.push(new Node(4, 500, 233, 4));
+        // nodes.push(new Node(5, 534, 532, 5));
+        // nodes.push(new Node(6, 73, 531, 6));
+        // nodes.push(new Node(7, 728, 234, 'E'));
+        
+
+        // this.linkNode(nodes[0], nodes[1]);
+        // this.linkNode(nodes[1], nodes[6]);
+        // this.linkNode(nodes[6], nodes[5]);
+        // this.linkNode(nodes[5], nodes[4]);
+        // this.linkNode(nodes[1], nodes[4]);
+        // this.linkNode(nodes[4], nodes[7]);
+
         this.nodes = nodes;
+    }
+
+    removeNode(node) {
+        //Disconnect
+        var isRemovedNode = (o=>o===node);
+        for (var n of node.neighbors) {
+            n.neighbors = n.neighbors.filter(isRemovedNode);
+            delete n.linkTo[node.id];
+        }
+
+        //Remove links
+        for (var link of Object.values(node.linkTo)) {
+            this.removeLink(link);
+        }
+
+        //Stop rendering
+        nodeLayer.removeChild(node.graphics);
+
+        //Remove from array
+        this.nodes.splice(this.nodes.indexOf(node), 1);
+    }
+
+    removeLink(link) {
+        //Stop rendering
+        linkLayer.removeChild(link.graphics);
+
+        //Remove from array
+        this.links.splice(this.links.indexOf(link), 1);
     }
 
     linkNode(nodeA, nodeB) {

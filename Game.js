@@ -9,21 +9,16 @@ var app = new PIXI.Application({
 var nodeLayer = new PIXI.Container();
 var antLayer = new PIXI.Container();
 var linkLayer = new PIXI.Container();
+var hudLayer = new PIXI.Container();
+
 
 app.stage.removeChildren();
 app.stage.addChild(linkLayer);
 app.stage.addChild(nodeLayer);
 app.stage.addChild(antLayer);
+app.stage.addChild(hudLayer);
 
 var ants = [];
-
-app.stage.hitArea = new PIXI.Rectangle(0, 0, app.screen.width, app.screen.height);
-app.stage.interactive = true;
-app.stage.mousedown = function (e) {
-    var p = e.data.getLocalPosition(this);
-    var n = new Node(nodes.length, p.x, p.y, '');
-    nodes.push(n);
-};
 
 var graph = new World();
 var nodes = graph.nodes;
