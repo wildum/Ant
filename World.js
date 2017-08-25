@@ -147,9 +147,9 @@ class World {
 
     removeNode(node) {
         //Disconnect
-        var isRemovedNode = (o=>o===node);
+        var isNotNode = (o=>o!==node);
         for (var n of node.neighbors) {
-            n.neighbors = n.neighbors.filter(isRemovedNode);
+            n.neighbors = n.neighbors.filter(isNotNode);
             delete n.linkTo[node.id];
         }
 
