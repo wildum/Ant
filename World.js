@@ -1,8 +1,11 @@
+var NODE_RADIUS = 15;
+var LINK_WIDTH = 2;
+
 class Node {
     constructor(id, x, y, text) {
         this.id = id;
-        this.radius = 15;
-        this.graphics = getNodeGraphics(this.radius, text);
+        this.radius = NODE_RADIUS;
+        this.graphics = getNodeGraphics(this.radius, text || '');
         this.graphics.x = x;
         this.graphics.y = y;
         this.neighbors = [];
@@ -65,11 +68,11 @@ function lerpColor(start, end, amount) {
  * Gets the number from [a;b] at percentage u
  */
 function lerp(a, b, u) {
-  if (a <= b) {
-    return a + (b - a) * u;
-  } else {
-    return b + (a - b) * (1 - u);
-  }
+    if (a <= b) {
+        return a + (b - a) * u;
+    } else {
+        return b + (a - b) * (1 - u);
+    }
 }
 
 class Link {
@@ -97,7 +100,7 @@ class Link {
         this.pheromones = this.pheromones * (1 - PHEROMONE_DECAY_RATE);
         var g = this.graphics;
         g.clear();
-        g.lineStyle(2, lerpColor(0x0, 0xFFFFFF, this.pheromones));
+        g.lineStyle(LINK_WIDTH, lerpColor(0x0, 0xFFFFFF, this.pheromones));
         g.moveTo(this.nodeA.x, this.nodeA.y);
         g.lineTo(this.nodeB.x, this.nodeB.y);
     }
@@ -140,6 +143,34 @@ class World {
         this.linkNode(nodes[8], nodes[9]);
 
         this.nodes = nodes;
+    }
+
+    removeNode(node) {
+        //Disconnect
+        var isRemovedNode = (o=>o===node);
+        for (var n of node.neighbors) {
+            n.neighbors = n.neighbors.filter(isRemovedNode);
+            delete n.linkTo[node.id];
+        }
+
+        //Remove links
+        for (var link of Object.values(node.linkTo)) {
+            this.removeLink(link);
+        }
+
+        //Stop rendering
+        nodeLayer.removeChild(node.graphics);
+
+        //Remove from array
+        this.nodes.splice(this.nodes.indexOf(node), 1);
+    }
+
+    removeLink(link) {
+        //Stop rendering
+        linkLayer.removeChild(link.graphics);
+
+        //Remove from array
+        this.links.splice(this.links.indexOf(link), 1);
     }
 
     linkNode(nodeA, nodeB) {
