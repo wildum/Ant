@@ -83,7 +83,9 @@ class Ant {
     selectNextTarget() {
         var links = Object.values(this.target.linkTo);
 
-        if (links.length > 1) {
+        if (links.length === 0) {
+            return;
+        } else if (links.length > 1) {
             links = links.filter(l => l !== this.getPreviousLink());
         }
 
@@ -119,6 +121,8 @@ class Ant {
             this.path.splice(minIndex);
         } else {
             //This ant lost the way home!
+            this.dead = true;
+            this.graphics.tint = 0x0;
         }
 
     }

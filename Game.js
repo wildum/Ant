@@ -27,7 +27,9 @@ var end = nodes[nodes.length - 1];
 var d = new Date();
 var timer = d.getTime();
 
-ants.push(new Ant(start));
+for (var i = 0; i < 20; ++i) {
+    ants.push(new Ant(start));
+}
 
 
 var interval = window.setInterval(function createAnt() {
@@ -40,6 +42,8 @@ var interval = window.setInterval(function createAnt() {
 
 function updateEnvironment() {
     ants.forEach(function (ant) {
+        if (ant.dead)
+            return;
         ant.move();
         if (ant.isAtTarget()) {
             // Define direction
