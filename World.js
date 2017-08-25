@@ -124,7 +124,7 @@ class World {
         nodes.push(new Node(8, 867, 178, ''));
         nodes.push(new Node(9, 948, 224, 'E'));
 
-        // //link nodes
+        //link nodes
         this.linkNode(nodes[0], nodes[1]);
         this.linkNode(nodes[0], nodes[3]);
         this.linkNode(nodes[1], nodes[3]);
@@ -142,23 +142,6 @@ class World {
         this.linkNode(nodes[7], nodes[8]);
         this.linkNode(nodes[7], nodes[9]);
         this.linkNode(nodes[8], nodes[9]);
-
-        // nodes.push(new Node(0, 30, 224, 'S'));
-        // nodes.push(new Node(1, 180, 227, 1));
-        // nodes.push(new Node(2, 284, 135, 2));
-        // nodes.push(new Node(3, 420, 138, 3));
-        // nodes.push(new Node(4, 500, 233, 4));
-        // nodes.push(new Node(5, 534, 532, 5));
-        // nodes.push(new Node(6, 73, 531, 6));
-        // nodes.push(new Node(7, 728, 234, 'E'));
-        
-
-        // this.linkNode(nodes[0], nodes[1]);
-        // this.linkNode(nodes[1], nodes[6]);
-        // this.linkNode(nodes[6], nodes[5]);
-        // this.linkNode(nodes[5], nodes[4]);
-        // this.linkNode(nodes[1], nodes[4]);
-        // this.linkNode(nodes[4], nodes[7]);
 
         this.nodes = nodes;
     }
