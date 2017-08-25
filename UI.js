@@ -33,7 +33,7 @@ app.stage.mousedown = function (e) {
         }
     }
     if (!node) {
-        node = new Node(nodes.length, p.x, p.y, nodes.length.toString());
+        node = new Node(p.x, p.y, nodes.length.toString());
         graph.nodes.push(node);
     }
     draggingFrom = node;

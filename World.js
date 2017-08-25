@@ -1,9 +1,10 @@
 var NODE_RADIUS = 15;
 var LINK_WIDTH = 2;
+var nextNodeId = 0;
 
 class Node {
-    constructor(id, x, y, text) {
-        this.id = id;
+    constructor(x, y, text) {
+        this.id = nextNodeId++;
         this.radius = NODE_RADIUS;
         this.graphics = getNodeGraphics(this.radius, text || '');
         this.graphics.x = x;
@@ -112,16 +113,16 @@ class World {
         this.links = [];
 
         //add nodes
-        nodes.push(new Node(0, 30, 224, 'S'));
-        nodes.push(new Node(1, 100, 300, ''));
-        nodes.push(new Node(2, 200, 356, ''));
-        nodes.push(new Node(3, 222, 169, ''));
-        nodes.push(new Node(4, 398, 178, ''));
-        nodes.push(new Node(5, 400, 300, ''));
-        nodes.push(new Node(6, 567, 178, ''));
-        nodes.push(new Node(7, 700, 250, ''));
-        nodes.push(new Node(8, 867, 178, ''));
-        nodes.push(new Node(9, 948, 224, 'E'));
+        nodes.push(new Node(30, 224, 'S'));
+        nodes.push(new Node(100, 300, ''));
+        nodes.push(new Node(200, 356, ''));
+        nodes.push(new Node(222, 169, ''));
+        nodes.push(new Node(398, 178, ''));
+        nodes.push(new Node(400, 300, ''));
+        nodes.push(new Node(567, 178, ''));
+        nodes.push(new Node(700, 250, ''));
+        nodes.push(new Node(867, 178, ''));
+        nodes.push(new Node(948, 224, 'E'));
 
         //link nodes
         this.linkNode(nodes[0], nodes[1]);
