@@ -3,7 +3,7 @@ var ANT_COLOR = 0xFF0000;
 var ANT_SPEED = 4;
 
 var PHEROMONE_STRENGTH = 1;
-var PHEROMONE_DECAY_RATE = 1.2e-3;
+var PHEROMONE_DECAY_RATE = 2.4e-3;
 
 function getAntGraphics(r) {
     var g = new PIXI.Graphics();

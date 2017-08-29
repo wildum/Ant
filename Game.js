@@ -77,4 +77,26 @@ function animate() {
     requestAnimationFrame(animate);
 }
 
+function reset() {
+    nodeLayer = new PIXI.Container();
+    antLayer = new PIXI.Container();
+    linkLayer = new PIXI.Container();
+    app.stage.removeChildren();
+    app.stage.addChild(linkLayer);
+    app.stage.addChild(nodeLayer);
+    app.stage.addChild(antLayer);
+    app.stage.addChild(hudLayer);
+    ants = [];
+    nextNodeId = 0;
+    graph = new World();
+    nodes = graph.nodes;
+    start = nodes[0];
+    end = nodes[nodes.length - 1];
+    d = new Date();
+    timer = d.getTime();
+    for (var i = 0; i < 20; ++i) {
+        ants.push(new Ant(start));
+    }
+}
+
 document.getElementById("canvasZone").appendChild(app.view);

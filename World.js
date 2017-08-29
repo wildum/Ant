@@ -7,6 +7,7 @@ class Node {
         this.id = nextNodeId++;
         this.radius = NODE_RADIUS;
         this.graphics = getNodeGraphics(this.radius, text || this.id.toString());
+        this.text = text;
         this.graphics.x = x;
         this.graphics.y = y;
         this.neighbors = [];
@@ -218,6 +219,50 @@ class World {
         nodeB.neighbors.push(nodeA);
         nodeB.linkTo[nodeA.id] = nodeA.linkTo[nodeB.id] = link;
         this.links.push(link);
+    }
+
+    getBestSolution() {
+        var p = 1;
+        var node = this.nodes[0];
+        var path = [node.id];
+        var previousLink = null;
+        var increment = 0;
+        while(node.text !== 'E') {
+            var links = Object.values(node.linkTo);
+
+            if (links.length === 0) {
+                console.log("No solution found");
+                return;
+            } else if (links.length > 1) {
+                links = links.filter(l => l !== previousLink);
+            }
+
+            var weights = [];
+            var sum = 0;
+            var bestLink;
+            var maxPheromones = 0;
+            for (var link of links) {
+                var w = 1 + link.pheromones;
+                sum += w;
+                if(w > maxPheromones) {
+                    bestLink = link;
+                    maxPheromones = w;
+                }
+            }
+            p *= maxPheromones / sum;
+            previousLink = bestLink;
+            node = bestLink.getOther(node);
+            path.push(node.id)
+            increment++;
+            if(increment > 2000) {
+                console.log("No solution found");
+                return;
+            }
+        }
+        p *= 100;
+        var results = {p, path};
+        console.log(results);
+        return results;
     }
 
     toString() {
