@@ -2,7 +2,7 @@ var ANT_RADIUS = 5;
 var ANT_COLOR = 0xFF0000;
 var ANT_SPEED = 4;
 
-var PHEROMONE_STRENGTH = 0.5;
+var PHEROMONE_STRENGTH = 1;
 var PHEROMONE_DECAY_RATE = 1.2e-3;
 
 function getAntGraphics(r) {

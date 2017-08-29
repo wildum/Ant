@@ -38,13 +38,24 @@ function getNodeGraphics(r, text) {
 
 function getLinkGraphics(x1, y1, x2, y2) {
     var g = new PIXI.Graphics();
+    var c = new PIXI.Container();
+
     g.lineStyle(2, 0x0);
     g.moveTo(x1, y1);
     g.lineTo(x2, y2);
 
-    linkLayer.addChild(g);
+    var label = new PIXI.Text('', { fontFamily: 'Arial', fontSize: 12, fill: 0xFFFFFF, align: 'center' });
+    label.anchor.x = label.anchor.y = 0.5;
+    label.x = (x1 + x2) / 2;
+    label.y = (y1 + y2) / 2;
 
-    return g;
+    c.label = label;
+
+    c.addChild(g);
+    c.addChild(label);
+    linkLayer.addChild(c);
+
+    return c;
 }
 
 function lerpColor(start, end, amount) {
@@ -82,6 +93,7 @@ class Link {
         this.nodeB = nodeB;
         this.graphics = getLinkGraphics(nodeA.x, nodeA.y, nodeB.x, nodeB.y);
         this.pheromones = 0;
+        this.label = this.graphics.label;
     }
 
     getOther(node) {
@@ -94,16 +106,18 @@ class Link {
     }
 
     placePheromone(strength) {
-        this.pheromones = lerp(this.pheromones, 1, strength);
+        this.pheromones += strength;
     }
 
     decayPheromone() {
         this.pheromones = this.pheromones * (1 - PHEROMONE_DECAY_RATE);
-        var g = this.graphics;
-        g.clear();
-        g.lineStyle(LINK_WIDTH, lerpColor(0x0, 0xFFFFFF, this.pheromones));
-        g.moveTo(this.nodeA.x, this.nodeA.y);
-        g.lineTo(this.nodeB.x, this.nodeB.y);
+        this.label.text = Math.floor(this.pheromones).toString();
+
+        // var g = this.graphics;
+        // g.clear();
+        // g.lineStyle(LINK_WIDTH, lerpColor(0x0, 0xFFFFFF, this.pheromones));
+        // g.moveTo(this.nodeA.x, this.nodeA.y);
+        // g.lineTo(this.nodeB.x, this.nodeB.y);
     }
 }
 
