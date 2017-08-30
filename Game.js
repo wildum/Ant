@@ -1,3 +1,5 @@
+var SPAWN_FREQUENCE = 2000;
+
 var app = new PIXI.Application({
     width: 974,
     height: 548,
@@ -10,13 +12,14 @@ var nodeLayer = new PIXI.Container();
 var antLayer = new PIXI.Container();
 var linkLayer = new PIXI.Container();
 var hudLayer = new PIXI.Container();
-
+var statsLayer = new PIXI.Container();
 
 app.stage.removeChildren();
 app.stage.addChild(linkLayer);
 app.stage.addChild(nodeLayer);
 app.stage.addChild(antLayer);
 app.stage.addChild(hudLayer);
+app.stage.addChild(statsLayer)
 
 var ants = [];
 
@@ -31,14 +34,17 @@ for (var i = 0; i < 20; ++i) {
     ants.push(new Ant(start));
 }
 
-
 var interval = window.setInterval(function createAnt() {
     var a = new Ant(start);
     ants.push(a);
     if (ants.length > 10000) {
         clearInterval(interval);
     }
-}, 2000);
+}, SPAWN_FREQUENCE);
+
+var showStatsInterval = window.setInterval(function statsUpdate() {
+    showStats();
+}, 1000);
 
 function updateEnvironment() {
     ants.forEach(function (ant) {
@@ -77,15 +83,18 @@ function animate() {
     requestAnimationFrame(animate);
 }
 
-function reset() {
+function reset(spawnFrequence, pheromoneStrength, pheromoneDecayRate) {
     nodeLayer = new PIXI.Container();
     antLayer = new PIXI.Container();
     linkLayer = new PIXI.Container();
+    hudLayer = new PIXI.Container();
+    statsLayer = new PIXI.Container();
     app.stage.removeChildren();
     app.stage.addChild(linkLayer);
     app.stage.addChild(nodeLayer);
     app.stage.addChild(antLayer);
     app.stage.addChild(hudLayer);
+    app.stage.addChild(statsLayer);
     ants = [];
     nextNodeId = 0;
     graph = new World();
@@ -97,6 +106,9 @@ function reset() {
     for (var i = 0; i < 20; ++i) {
         ants.push(new Ant(start));
     }
+    SPAWN_FREQUENCE = spawnFrequence;
+    PHEROMONE_STRENGTH = pheromoneStrength;
+    PHEROMONE_DECAY_RATE = pheromoneDecayRate;
 }
 
 document.getElementById("canvasZone").appendChild(app.view);

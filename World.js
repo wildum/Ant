@@ -133,34 +133,32 @@ class World {
             var nodes = this.nodes;
             //add nodes
             nodes.push(new Node(30, 224, 'S'));
-            nodes.push(new Node(100, 300, ''));
-            nodes.push(new Node(200, 356, ''));
-            nodes.push(new Node(222, 169, ''));
-            nodes.push(new Node(398, 178, ''));
-            nodes.push(new Node(400, 300, ''));
-            nodes.push(new Node(567, 178, ''));
-            nodes.push(new Node(700, 250, ''));
-            nodes.push(new Node(867, 178, ''));
+            nodes.push(new Node(100, 50, ''));
+            nodes.push(new Node(300, 50, ''));
+            nodes.push(new Node(700, 50, ''));
+            nodes.push(new Node(180, 400, ''));
+            nodes.push(new Node(366, 270, ''));
+            nodes.push(new Node(567, 340, ''));
+            nodes.push(new Node(663, 224, ''));
+            nodes.push(new Node(300, 224, ''));
+            nodes.push(new Node(534, 130, ''));
             nodes.push(new Node(948, 224, 'E'));
 
             //link nodes
             this.linkNode(nodes[0], nodes[1]);
-            this.linkNode(nodes[0], nodes[3]);
-            this.linkNode(nodes[1], nodes[3]);
+            this.linkNode(nodes[0], nodes[4]);
+            this.linkNode(nodes[0], nodes[8]);
             this.linkNode(nodes[1], nodes[2]);
             this.linkNode(nodes[2], nodes[3]);
-            this.linkNode(nodes[3], nodes[4]);
-            this.linkNode(nodes[2], nodes[5]);
-            this.linkNode(nodes[3], nodes[5]);
+            this.linkNode(nodes[2], nodes[8]);
+            this.linkNode(nodes[3], nodes[10]);
             this.linkNode(nodes[4], nodes[5]);
-            this.linkNode(nodes[4], nodes[6]);
             this.linkNode(nodes[5], nodes[6]);
             this.linkNode(nodes[6], nodes[7]);
-            this.linkNode(nodes[5], nodes[7]);
-            this.linkNode(nodes[6], nodes[8]);
-            this.linkNode(nodes[7], nodes[8]);
             this.linkNode(nodes[7], nodes[9]);
-            this.linkNode(nodes[8], nodes[9]);
+            this.linkNode(nodes[7], nodes[10]);
+            this.linkNode(nodes[9], nodes[10]);
+            this.linkNode(nodes[7], nodes[8]);
         }
 
     }
@@ -216,7 +214,6 @@ class World {
 
     linkNode(nodeA, nodeB) {
         var link = new Link(nodeA, nodeB);
-
         nodeA.neighbors.push(nodeB);
         nodeB.neighbors.push(nodeA);
         nodeB.linkTo[nodeA.id] = nodeA.linkTo[nodeB.id] = link;
@@ -262,8 +259,7 @@ class World {
             }
         }
         p *= 100;
-        var results = { p, path };
-        console.log(results);
+        var results = { p, path, SPAWN_FREQUENCE, PHEROMONE_STRENGTH, PHEROMONE_DECAY_RATE };
         return results;
     }
 

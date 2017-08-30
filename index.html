@@ -21,8 +21,11 @@
     <div id="controls">
         <button onclick="localStorage.clear()">Erase localStorage</button>
         <button onclick="graph.getBestSolution()">Log results</button>
-        <button onclick="reset()">Reset</button>
    </div>
+    <script>
+        var pop = createPopulation();
+        showStats();
+    </script>
    
   
    <script type="text/javascript">
