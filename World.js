@@ -180,7 +180,9 @@ class World {
             this.nodes.push(new Node(n.x, n.y, label));
         }
         for (var link of data.links) {
-            this.linkNode(this.nodes[link.a], this.nodes[link.b]);
+            if (this.nodes[link.a] && this.nodes[link.b]) {
+                this.linkNode(this.nodes[link.a], this.nodes[link.b]);
+            }
         }
     }
 
@@ -227,7 +229,7 @@ class World {
         var path = [node.id];
         var previousLink = null;
         var increment = 0;
-        while(node.text !== 'E') {
+        while (node.text !== 'E') {
             var links = Object.values(node.linkTo);
 
             if (links.length === 0) {
@@ -244,7 +246,7 @@ class World {
             for (var link of links) {
                 var w = 1 + link.pheromones;
                 sum += w;
-                if(w > maxPheromones) {
+                if (w > maxPheromones) {
                     bestLink = link;
                     maxPheromones = w;
                 }
@@ -254,13 +256,13 @@ class World {
             node = bestLink.getOther(node);
             path.push(node.id)
             increment++;
-            if(increment > 2000) {
+            if (increment > 2000) {
                 console.log("No solution found");
                 return;
             }
         }
         p *= 100;
-        var results = {p, path};
+        var results = { p, path };
         console.log(results);
         return results;
     }
@@ -268,7 +270,7 @@ class World {
     toString() {
         return JSON.stringify({
             nodes: this.nodes.map(n => ({ x: n.x, y: n.y })),
-            links: this.links.map(l => ({ a: this.nodes.indexOf(l.nodeA), b: this.nodes.indexOf(l.nodeB) }))
+            links: this.links.map(l => ({ a: this.nodes.indexOf(l.nodeA), b: this.nodes.indexOf(l.nodeB) }).filter(v => v.a != -1 && v.b != -1))
         });
     }
 }
