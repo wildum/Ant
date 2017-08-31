@@ -34,6 +34,8 @@ for (var i = 0; i < 20; ++i) {
     ants.push(new Ant(start));
 }
 
+setInterval(() => { for (var i = 0; i < 50; ++i) { updateEnvironment(); } }, 0);
+
 var interval = window.setInterval(function createAnt() {
     var a = new Ant(start);
     ants.push(a);
@@ -55,9 +57,11 @@ function updateEnvironment() {
             // Define direction
             if (ant.wayBack) {
                 ant.placePheromone();
-                if (!ant.path.length) {
+                // if (!ant.path.length) {
+                if (ant.target === start) {
                     ant.wayBack = false;
                     ant.graphics.tint = ANT_COLOR;
+                    ant.path = [];
                 }
             } else if (!ant.wayBack) {
                 ant.updatePath();
@@ -78,7 +82,6 @@ function updateEnvironment() {
 }
 
 function animate() {
-    updateEnvironment();
     app.render();
     requestAnimationFrame(animate);
 }

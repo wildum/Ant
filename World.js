@@ -255,7 +255,7 @@ class World {
             increment++;
             if (increment > 2000) {
                 console.log("No solution found");
-                return;
+                break;
             }
         }
         p *= 100;
@@ -266,7 +266,7 @@ class World {
     toString() {
         return JSON.stringify({
             nodes: this.nodes.map(n => ({ x: n.x, y: n.y })),
-            links: this.links.map(l => ({ a: this.nodes.indexOf(l.nodeA), b: this.nodes.indexOf(l.nodeB) }).filter(v => v.a != -1 && v.b != -1))
+            links: this.links.map(l => ({ a: this.nodes.indexOf(l.nodeA), b: this.nodes.indexOf(l.nodeB) })).filter(v => v.a != -1 && v.b != -1)
         });
     }
 }
