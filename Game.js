@@ -38,10 +38,10 @@ setInterval(() => { for (var i = 0; i < 50; ++i) { updateEnvironment(); } }, 0);
 
 var interval = window.setInterval(function createAnt() {
     var a = new Ant(start);
-    ants.push(a);
     if (ants.length > 10000) {
-        clearInterval(interval);
+        ants.push(a);
     }
+    clearInterval(interval);
 }, SPAWN_FREQUENCE);
 
 var showStatsInterval = window.setInterval(function statsUpdate() {
