@@ -93,7 +93,7 @@ class Link {
         this.nodeA = nodeA;
         this.nodeB = nodeB;
         this.graphics = getLinkGraphics(nodeA.x, nodeA.y, nodeB.x, nodeB.y);
-        this.pheromones = 0;
+        this.pheromones = [];
         this.label = this.graphics.label;
     }
 
@@ -106,13 +106,28 @@ class Link {
         throw "Exception: The given node isn't attached to this link";
     }
 
+    getTotalPheromones() {
+        var total = 0;
+        var i = this.pheromones.length;
+        debugger;
+        while(i--) {
+            if(this.pheromones[i] <= 0) {
+                this.pheromones.splice(i, 1);
+            }
+            else {
+                total += this.pheromones[i];
+            }
+        }
+        return total;
+    }
+
     placePheromone(strength) {
-        this.pheromones += strength;
+        this.pheromones.push(strength);
     }
 
     decayPheromone() {
-        this.pheromones = this.pheromones * (1 - PHEROMONE_DECAY_RATE);
-        this.label.text = Math.floor(this.pheromones).toString();
+        this.pheromones = this.pheromones.map(p => p - PHEROMONE_DECAY_RATE);
+        this.label.text = Math.floor(this.getTotalPheromones()).toString();
 
         // var g = this.graphics;
         // g.clear();
@@ -132,33 +147,23 @@ class World {
         } else {
             var nodes = this.nodes;
             //add nodes
-            nodes.push(new Node(30, 224, 'S'));
-            nodes.push(new Node(100, 50, ''));
-            nodes.push(new Node(300, 50, ''));
+            nodes.push(new Node(150, 224, 'S'));
+            nodes.push(new Node(500, 224, ''));
+            nodes.push(new Node(250, 400, ''));
             nodes.push(new Node(700, 50, ''));
-            nodes.push(new Node(180, 400, ''));
-            nodes.push(new Node(366, 270, ''));
-            nodes.push(new Node(567, 340, ''));
-            nodes.push(new Node(663, 224, ''));
-            nodes.push(new Node(300, 224, ''));
-            nodes.push(new Node(534, 130, ''));
-            nodes.push(new Node(948, 224, 'E'));
+            nodes.push(new Node(700, 354, ''));
+            nodes.push(new Node(200, 35, ''));
+            nodes.push(new Node(900, 224, 'E'));
 
             //link nodes
             this.linkNode(nodes[0], nodes[1]);
-            this.linkNode(nodes[0], nodes[4]);
-            this.linkNode(nodes[0], nodes[8]);
-            this.linkNode(nodes[1], nodes[2]);
-            this.linkNode(nodes[2], nodes[3]);
-            this.linkNode(nodes[2], nodes[8]);
-            this.linkNode(nodes[3], nodes[10]);
-            this.linkNode(nodes[4], nodes[5]);
-            this.linkNode(nodes[5], nodes[6]);
-            this.linkNode(nodes[6], nodes[7]);
-            this.linkNode(nodes[7], nodes[9]);
-            this.linkNode(nodes[7], nodes[10]);
-            this.linkNode(nodes[9], nodes[10]);
-            this.linkNode(nodes[7], nodes[8]);
+            this.linkNode(nodes[0], nodes[2]);
+            this.linkNode(nodes[1], nodes[6]);
+            this.linkNode(nodes[2], nodes[4]);
+            this.linkNode(nodes[3], nodes[5]);
+            this.linkNode(nodes[3], nodes[6]);
+            this.linkNode(nodes[1], nodes[5]);
+            this.linkNode(nodes[1], nodes[4]);
         }
 
     }
@@ -241,7 +246,7 @@ class World {
             var bestLink;
             var maxPheromones = 0;
             for (var link of links) {
-                var w = 1 + link.pheromones;
+                var w = 1 + link.getTotalPheromones();
                 sum += w;
                 if (w > maxPheromones) {
                     bestLink = link;
