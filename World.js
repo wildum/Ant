@@ -109,7 +109,6 @@ class Link {
     getTotalPheromones() {
         var total = 0;
         var i = this.pheromones.length;
-        debugger;
         while(i--) {
             if(this.pheromones[i] <= 0) {
                 this.pheromones.splice(i, 1);
@@ -146,6 +145,9 @@ class World {
             this.parse(localStorage.world);
         } else {
             var nodes = this.nodes;
+            
+            //CHANGE THE SIMULATION IF YOU CHANGE THE MAP
+
             //add nodes
             nodes.push(new Node(150, 224, 'S'));
             nodes.push(new Node(500, 224, ''));
