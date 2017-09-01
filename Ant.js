@@ -3,7 +3,7 @@ var ANT_COLOR = 0xFF0000;
 var ANT_SPEED = 4;
 
 var PHEROMONE_STRENGTH = 1;
-var PHEROMONE_DECAY_RATE = 2.4e-3;
+var PHEROMONE_DECAY_RATE = 2e-4;
 
 function getAntGraphics(r) {
     var g = new PIXI.Graphics();
@@ -92,7 +92,7 @@ class Ant {
         var weights = [];
         var sum = 0;
         for (var link of links) {
-            var w = 1 + link.pheromones;
+            var w = 1 + link.getTotalPheromones();
             weights.push(w);
             sum += w;
         }
