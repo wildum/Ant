@@ -96,9 +96,11 @@ function showStats() {
     c.addChild(spawnFrequenceLabel);
     c.addChild(probabilityLabel);
     c.addChild(pathLabel);
-    statsLayer.destroy(true);
-    statsLayer = new PIXI.Container();
-    statsLayer.removeChildren();
+
+    if (statsLayer.children[0]) {
+        statsLayer.children[0].destroy(true);
+        statsLayer.removeChildren();
+    }    
     statsLayer.addChild(c);
     return c;
 }
