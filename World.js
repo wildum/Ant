@@ -262,7 +262,7 @@ class World {
             increment++;
             if (increment > 2000) {
                 // spammy
-                console.log("No solution found");
+                // console.log("No solution found");
                 break;
             }
         }
