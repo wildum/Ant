@@ -19,7 +19,17 @@ app.stage.addChild(linkLayer);
 app.stage.addChild(nodeLayer);
 app.stage.addChild(antLayer);
 app.stage.addChild(hudLayer);
-app.stage.addChild(statsLayer)
+app.stage.addChild(statsLayer);
+
+var discTexture;
+function initTextures() {
+    var g = new PIXI.Graphics();
+    g.beginFill(0xFFFFFF);
+    g.drawCircle(0, 0, 20);
+    g.endFill();
+    discTexture = g.generateCanvasTexture();
+}
+initTextures();
 
 var ants = [];
 
@@ -81,7 +91,7 @@ function updateEnvironment() {
     graph.links.forEach(link => link.decayPheromone());
 }
 
-function animate() {
+function animate() {    
     app.render();
     requestAnimationFrame(animate);
 }
@@ -92,6 +102,9 @@ function reset(spawnFrequence, pheromoneStrength, pheromoneDecayRate) {
     linkLayer = new PIXI.Container();
     hudLayer = new PIXI.Container();
     statsLayer = new PIXI.Container();
+    app.stage.destroy(true);
+    initTextures();
+    app.stage = new PIXI.Container();
     app.stage.removeChildren();
     app.stage.addChild(linkLayer);
     app.stage.addChild(nodeLayer);

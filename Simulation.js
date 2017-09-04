@@ -9,8 +9,18 @@ var solutions = [];
 function algorithm () {
     population = createPopulation();
     runSimulation();
-    var interval = window.setInterval(function checkEndGeneration() {
-        if(population.length === 0) {
+}
+
+function simulationGenerator(chrom) {
+    var results = graph.getBestSolution();
+    reset(chrom.SPAWN_FREQUENCE, chrom.PHEROMONE_STRENGTH, chrom.PHEROMONE_DECAY_RATE);
+    return results;
+}
+
+function runSimulation() {
+    var interval = window.setInterval(function simulator() {
+        solutions.push(simulationGenerator(population.pop()));
+        if (population.length === 0) {
             var solutionsSelected = selection(solutions);
             solutions = [];
             var bestSolution = solutionsSelected[solutionsSelected.length - 1];
@@ -30,18 +40,6 @@ function algorithm () {
             + " pheromone strength: " + bestSolution.PHEROMONE_STRENGTH 
             + " pheromone decay rate: " +  bestSolution.PHEROMONE_DECAY_RATE);
         }
-    }, 1000);
-}
-
-function simulationGenerator(chrom) {
-    var results = graph.getBestSolution();
-    reset(chrom.SPAWN_FREQUENCE, chrom.PHEROMONE_STRENGTH, chrom.PHEROMONE_DECAY_RATE);
-    return results;
-}
-
-function runSimulation() {
-    var interval = window.setInterval(function simulator() {
-        solutions.push(simulationGenerator(population.pop()));
     }, SIMULATION_TIME);
 }
 

@@ -6,13 +6,8 @@ var PHEROMONE_STRENGTH = 1;
 var PHEROMONE_DECAY_RATE = 2e-4;
 
 function getAntGraphics(r) {
-    var g = new PIXI.Graphics();
-    g.beginFill(0xFFFFFF);
-    g.drawCircle(r, r, r);
-    g.endFill();
-
-    var sprite = new PIXI.Sprite(app.renderer.generateTexture(g));
-
+    var sprite = new PIXI.Sprite(discTexture);
+    sprite.scale.set((r*2)/sprite.width);
     antLayer.addChild(sprite);
 
     sprite.tint = ANT_COLOR;

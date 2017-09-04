@@ -22,19 +22,19 @@ class Node {
 }
 
 function getNodeGraphics(r, text) {
-    var c = new PIXI.Container();
-    var g = new PIXI.Graphics();
-    g.beginFill(0x000000);
-    g.drawCircle(0, 0, r);
-    g.endFill();
-    c.addChild(g);
+    var container = new PIXI.Container();
+    var s = new PIXI.Sprite(discTexture);
+    s.scale.set((2 * r) / discTexture.width);
+    s.anchor.set(0.5);
+    s.tint = 0x0;
+    container.addChild(s);
     if (text !== '') {
         var label = new PIXI.Text(text, { fontFamily: 'Arial', fontSize: 12, fill: 0xFFFFFF, align: 'center' });
         label.anchor.x = label.anchor.y = 0.5;
-        c.addChild(label);
+        container.addChild(label);
     }
-    nodeLayer.addChild(c);
-    return c;
+    nodeLayer.addChild(container);
+    return container;
 }
 
 function getLinkGraphics(x1, y1, x2, y2) {
@@ -109,8 +109,8 @@ class Link {
     getTotalPheromones() {
         var total = 0;
         var i = this.pheromones.length;
-        while(i--) {
-            if(this.pheromones[i] <= 0) {
+        while (i--) {
+            if (this.pheromones[i] <= 0) {
                 this.pheromones.splice(i, 1);
             }
             else {
@@ -145,7 +145,7 @@ class World {
             this.parse(localStorage.world);
         } else {
             var nodes = this.nodes;
-            
+
             //CHANGE THE SIMULATION IF YOU CHANGE THE MAP
 
             //add nodes
@@ -258,9 +258,10 @@ class World {
             p *= maxPheromones / sum;
             previousLink = bestLink;
             node = bestLink.getOther(node);
-            path.push(node.id)
+            path.push(node.id);
             increment++;
             if (increment > 2000) {
+                // spammy
                 console.log("No solution found");
                 break;
             }
@@ -271,8 +272,10 @@ class World {
     }
 
     toString() {
+        var nodes = this.nodes.filter(n => n !== end).map(n => ({ x: n.x, y: n.y }));
+        nodes.push({ x: end.x, y: end.y });
         return JSON.stringify({
-            nodes: this.nodes.map(n => ({ x: n.x, y: n.y })),
+            nodes: nodes,
             links: this.links.map(l => ({ a: this.nodes.indexOf(l.nodeA), b: this.nodes.indexOf(l.nodeB) })).filter(v => v.a != -1 && v.b != -1)
         });
     }
