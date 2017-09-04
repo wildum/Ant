@@ -91,11 +91,19 @@ function showStats() {
     var pathLabel = new PIXI.Text('Best path: ' + stats.path, { fontFamily: 'Arial', fontSize: 14, fill: 0xFFFFFF, align: 'center' });
     pathLabel.x = 650;
     pathLabel.y = 460;
+    var generationLabel = new PIXI.Text('Generation: ' + generation, { fontFamily: 'Arial', fontSize: 14, fill: 0xFFFFFF, align: 'center' });
+    generationLabel.x = 50;
+    generationLabel.y = 450;
+    var bestSolutionLabel = new PIXI.Text('Best solution: ' + Math.round(bestSolution.p) + ', ' + Math.round(bestSolution.SPAWN_FREQUENCE) + ', ' + bestSolution.PHEROMONE_STRENGTH + ', ' + bestSolution.PHEROMONE_DECAY_RATE, { fontFamily: 'Arial', fontSize: 14, fill: 0xFFFFFF, align: 'center' });
+    bestSolutionLabel.x = 50;
+    bestSolutionLabel.y = 470;
     c.addChild(pheromoneStrengthLabel);
     c.addChild(pheromoneDecayRateLabel);
     c.addChild(spawnFrequenceLabel);
     c.addChild(probabilityLabel);
     c.addChild(pathLabel);
+    c.addChild(generationLabel);
+    c.addChild(bestSolutionLabel);
 
     if (statsLayer.children[0]) {
         statsLayer.children[0].destroy(true);

@@ -4,6 +4,7 @@ const SIMULATION_TIME  = 10000;
 var generation = 0;
 var population = [];
 var solutions = [];
+var bestSolution = [];
 
 
 function algorithm () {
@@ -23,7 +24,7 @@ function runSimulation() {
         if (population.length === 0) {
             var solutionsSelected = selection(solutions);
             solutions = [];
-            var bestSolution = solutionsSelected[solutionsSelected.length - 1];
+            bestSolution = solutionsSelected[solutionsSelected.length - 1];
             population = solutionsIntoNewPopulation(solutionsSelected);
             while(population.length < POPULATION_SIZE) {
                 var parent1 = population[Math.round(Math.random()*population.length -1)];
@@ -33,12 +34,6 @@ function runSimulation() {
                 population.push(child);
             }
             generation++;
-            console.log("Current generation: " + generation);
-            console.log("Best solution: " 
-            + "probabilité: "+ bestSolution.p
-            + "  spawn frequence: " + bestSolution.SPAWN_FREQUENCE 
-            + " pheromone strength: " + bestSolution.PHEROMONE_STRENGTH 
-            + " pheromone decay rate: " +  bestSolution.PHEROMONE_DECAY_RATE);
         }
     }, SIMULATION_TIME);
 }
