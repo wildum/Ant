@@ -96,13 +96,13 @@ function mutation(chrom) {
     var r = Math.floor(Math.random() * 5); // if 3 or 4 no mutation
     switch (r) {
         case 0:
-            chrom.SPAWN_FREQUENCE = Math.random() * 4950 + 50;
+            chrom.SPAWN_FREQUENCE = Math.random() * 495 + 0.1; // 500
             break;
         case 1:
-            chrom.PHEROMONE_STRENGTH = Math.random() * 2.9 + 0.1;
+            chrom.PHEROMONE_STRENGTH = Math.random() * 5 + 0.1; //0.3-3
             break;
         case 2:
-            chrom.PHEROMONE_DECAY_RATE = Math.random() * 3.4e-4 + 0.1e-4;
+            chrom.PHEROMONE_DECAY_RATE = Math.random() * 3.4e-3 + 0.1e-4; //0.1e-3 - 3.4e-3
             break;
     }
     return chrom;
