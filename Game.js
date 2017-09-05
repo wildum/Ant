@@ -53,7 +53,7 @@ for (var i = 0; i < 20; ++i) {
 
 setInterval(() => { for (var i = 0; i < 50; ++i) { updateEnvironment(); } }, 0);
 
-var interval = window.setInterval(function createAnt() {
+var spawningAntInterval = window.setInterval(function createAnt() {
     if (ants.length < 5000) {
         var a = new Ant(start);
         ants.push(a);
@@ -127,6 +127,14 @@ function reset(spawnFrequence, pheromoneStrength, pheromoneDecayRate) {
     SPAWN_FREQUENCE = spawnFrequence;
     PHEROMONE_STRENGTH = pheromoneStrength;
     PHEROMONE_DECAY_RATE = pheromoneDecayRate;
+    clearInterval(spawningAntInterval);
+    spawningAntInterval = window.setInterval(function createAnt() {
+        if (ants.length < 5000) {
+            var a = new Ant(start);
+            ants.push(a);
+        }
+    }, SPAWN_FREQUENCE);
+
 }
 
 document.getElementById("canvasZone").appendChild(app.view);

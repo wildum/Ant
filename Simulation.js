@@ -53,9 +53,9 @@ function runSimulation() {
 function createPopulation() {
     var population = [];
     for (var i = 0; i < POPULATION_SIZE; i++) {
-        var SPAWN_FREQUENCE = Math.random() * 4950 + 50; // 50-5000
-        var PHEROMONE_STRENGTH = Math.random() * 2.9 + 0.1; //0.3-3
-        var PHEROMONE_DECAY_RATE = Math.random() * 3.4e-4 + 0.1e-4; //0.1e-3 - 3.4e-3
+        var SPAWN_FREQUENCE = Math.random() * 495 + 0.1; // 500
+        var PHEROMONE_STRENGTH = Math.random() * 5 + 0.1; //0.3-3
+        var PHEROMONE_DECAY_RATE = Math.random() * 3.4e-3 + 0.1e-4; //0.1e-3 - 3.4e-3
         population.push({ SPAWN_FREQUENCE, PHEROMONE_STRENGTH, PHEROMONE_DECAY_RATE });
     }
     return population;
