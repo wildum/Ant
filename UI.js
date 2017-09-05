@@ -20,6 +20,11 @@ app.stage.rightdown = function (e) {
     if (node) {
         graph.removeNode(node);
         draggingFrom = null;
+        if (node === end) {
+            end = graph.nodes[graph.nodes.length - 1];
+        } else if (node === start) {
+            start = graph.nodes[0];
+        }
     }
     save();
 };
@@ -76,13 +81,13 @@ function save() {
 function showStats() {
     var c = new PIXI.Container();
     var stats = graph.getBestSolution();
-    var pheromoneStrengthLabel = new PIXI.Text('Pheromone strength: ' + stats.PHEROMONE_STRENGTH, { fontFamily: 'Arial', fontSize: 14, fill: 0xFFFFFF, align: 'center' });
+    var pheromoneStrengthLabel = new PIXI.Text('Pheromone strength: ' + stats.PHEROMONE_STRENGTH.toFixed(5), { fontFamily: 'Arial', fontSize: 14, fill: 0xFFFFFF, align: 'center' });
     pheromoneStrengthLabel.x = 650;
     pheromoneStrengthLabel.y = 380;
-    var pheromoneDecayRateLabel = new PIXI.Text('Pheromone decay rate: ' + stats.PHEROMONE_DECAY_RATE, { fontFamily: 'Arial', fontSize: 14, fill: 0xFFFFFF, align: 'center' });
+    var pheromoneDecayRateLabel = new PIXI.Text('Pheromone decay rate: ' + stats.PHEROMONE_DECAY_RATE.toExponential(5), { fontFamily: 'Arial', fontSize: 14, fill: 0xFFFFFF, align: 'center' });
     pheromoneDecayRateLabel.x = 650;
     pheromoneDecayRateLabel.y = 400;
-    var spawnFrequenceLabel = new PIXI.Text('Spawn frequence: ' + stats.SPAWN_FREQUENCE, { fontFamily: 'Arial', fontSize: 14, fill: 0xFFFFFF, align: 'center' });
+    var spawnFrequenceLabel = new PIXI.Text('Spawn frequence: ' + stats.SPAWN_FREQUENCE.toFixed(5), { fontFamily: 'Arial', fontSize: 14, fill: 0xFFFFFF, align: 'center' });
     spawnFrequenceLabel.x = 650;
     spawnFrequenceLabel.y = 420;
     var probabilityLabel = new PIXI.Text('Probability: ' + stats.p, { fontFamily: 'Arial', fontSize: 14, fill: 0xFFFFFF, align: 'center' });
@@ -94,21 +99,16 @@ function showStats() {
     var generationLabel = new PIXI.Text('Generation: ' + generation, { fontFamily: 'Arial', fontSize: 14, fill: 0xFFFFFF, align: 'center' });
     generationLabel.x = 50;
     generationLabel.y = 450;
-    var bestSolutionLabel = new PIXI.Text('Best solution: ' + Math.round(bestSolution.p) + ', ' + Math.round(bestSolution.SPAWN_FREQUENCE) + ', ' + bestSolution.PHEROMONE_STRENGTH + ', ' + bestSolution.PHEROMONE_DECAY_RATE, { fontFamily: 'Arial', fontSize: 14, fill: 0xFFFFFF, align: 'center' });
-    bestSolutionLabel.x = 50;
-    bestSolutionLabel.y = 470;
+    
     c.addChild(pheromoneStrengthLabel);
     c.addChild(pheromoneDecayRateLabel);
     c.addChild(spawnFrequenceLabel);
     c.addChild(probabilityLabel);
     c.addChild(pathLabel);
     c.addChild(generationLabel);
-    c.addChild(bestSolutionLabel);
 
-    if (statsLayer.children[0]) {
-        statsLayer.children[0].destroy(true);
-        statsLayer.removeChildren();
-    }    
+    statsLayer.children.forEach(c=>c.destroy(true));
+    statsLayer.removeChildren();
     statsLayer.addChild(c);
     return c;
 }

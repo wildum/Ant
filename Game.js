@@ -8,18 +8,27 @@ var app = new PIXI.Application({
     backgroundColor: 0x2233FF
 });
 
+var gameLayer = new PIXI.Container();
+var chromoseStatsLayer = new PIXI.Container();
+var generationStatsLayer = new PIXI.Container();
+var hudLayer = new PIXI.Container();
+
+app.stage.addChild(gameLayer);
+app.stage.addChild(hudLayer);
+app.stage.addChild(chromoseStatsLayer);
+app.stage.addChild(generationStatsLayer);
+
 var nodeLayer = new PIXI.Container();
 var antLayer = new PIXI.Container();
 var linkLayer = new PIXI.Container();
-var hudLayer = new PIXI.Container();
 var statsLayer = new PIXI.Container();
+var bestOfPreviousGenerationLayer = new PIXI.Container();
 
-app.stage.removeChildren();
-app.stage.addChild(linkLayer);
-app.stage.addChild(nodeLayer);
-app.stage.addChild(antLayer);
-app.stage.addChild(hudLayer);
-app.stage.addChild(statsLayer);
+gameLayer.addChild(linkLayer);
+gameLayer.addChild(nodeLayer);
+gameLayer.addChild(antLayer);
+chromoseStatsLayer.addChild(statsLayer);
+generationStatsLayer.addChild(bestOfPreviousGenerationLayer);
 
 var discTexture;
 function initTextures() {
@@ -37,8 +46,6 @@ var graph = new World();
 var nodes = graph.nodes;
 var start = nodes[0];
 var end = nodes[nodes.length - 1];
-var d = new Date();
-var timer = d.getTime();
 
 for (var i = 0; i < 20; ++i) {
     ants.push(new Ant(start));
@@ -47,11 +54,10 @@ for (var i = 0; i < 20; ++i) {
 setInterval(() => { for (var i = 0; i < 50; ++i) { updateEnvironment(); } }, 0);
 
 var interval = window.setInterval(function createAnt() {
-    var a = new Ant(start);
-    if (ants.length > 10000) {
+    if (ants.length < 5000) {
+        var a = new Ant(start);
         ants.push(a);
     }
-    clearInterval(interval);
 }, SPAWN_FREQUENCE);
 
 var showStatsInterval = window.setInterval(function statsUpdate() {
@@ -100,25 +106,21 @@ function reset(spawnFrequence, pheromoneStrength, pheromoneDecayRate) {
     nodeLayer = new PIXI.Container();
     antLayer = new PIXI.Container();
     linkLayer = new PIXI.Container();
-    hudLayer = new PIXI.Container();
-    statsLayer = new PIXI.Container();
-    app.stage.destroy(true);
-    initTextures();
-    app.stage = new PIXI.Container();
-    app.stage.removeChildren();
-    app.stage.addChild(linkLayer);
-    app.stage.addChild(nodeLayer);
-    app.stage.addChild(antLayer);
-    app.stage.addChild(hudLayer);
-    app.stage.addChild(statsLayer);
+    
+    gameLayer.children.forEach(c=>c.destroy(true));
+    initTextures();    
+    gameLayer.removeChildren();
+    gameLayer.addChild(linkLayer);
+    gameLayer.addChild(nodeLayer);
+    gameLayer.addChild(antLayer);
+    
     ants = [];
     nextNodeId = 0;
     graph = new World();
     nodes = graph.nodes;
     start = nodes[0];
     end = nodes[nodes.length - 1];
-    d = new Date();
-    timer = d.getTime();
+    
     for (var i = 0; i < 20; ++i) {
         ants.push(new Ant(start));
     }

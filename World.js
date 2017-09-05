@@ -263,6 +263,8 @@ class World {
             if (increment > 2000) {
                 // spammy
                 // console.log("No solution found");
+                path = [];
+                p = 0;
                 break;
             }
         }
