@@ -67,6 +67,7 @@ function selection(solutions) {
 
     solutions = solutions.filter(s => s.path.toString() === SHORTER_PATH.toString());
     solutions.sort(compare);
+    solutions.reverse();
     solutionsSelected = [];
 
     graded = GRADED_RETAIN_PERCENT * solutions.length;
