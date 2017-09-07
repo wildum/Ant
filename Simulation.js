@@ -25,7 +25,7 @@ function runSimulation() {
         if (population.length === 0) {
             var solutionsSelected = selection(solutions);
             solutions = [];
-            bestSolution = solutionsSelected[solutionsSelected.length - 1];
+            bestSolution = solutionsSelected[0];
             population = solutionsIntoNewPopulation(solutionsSelected);
             while (population.length < POPULATION_SIZE) {
                 var parent1 = population[Math.round(Math.random() * population.length - 1)];
@@ -67,7 +67,6 @@ function selection(solutions) {
 
     solutions = solutions.filter(s => s.path.toString() === SHORTER_PATH.toString());
     solutions.sort(compare);
-    solutions.reverse();
     solutionsSelected = [];
 
     graded = GRADED_RETAIN_PERCENT * solutions.length;
@@ -81,7 +80,6 @@ function selection(solutions) {
         solutionsSelected.push(solutions.splice(Math.round(Math.random() * solutions.length - 1), 1)[0]);
         nongraded--;
     }
-
     return solutionsSelected;
 }
 
