@@ -1,4 +1,4 @@
-var SPAWN_FREQUENCE = 2000;
+var SPAWN_FREQUENCE = 10;
 
 var app = new PIXI.Application({
     width: 974,
@@ -54,7 +54,7 @@ for (var i = 0; i < 20; ++i) {
 setInterval(() => { for (var i = 0; i < 50; ++i) { updateEnvironment(); } }, 0);
 
 var spawningAntInterval = window.setInterval(function createAnt() {
-    if (ants.length < 5000) {
+    if (ants.length < 500) {
         var a = new Ant(start);
         ants.push(a);
     }
@@ -108,7 +108,7 @@ function reset(spawnFrequence, pheromoneStrength, pheromoneDecayRate) {
     linkLayer = new PIXI.Container();
     
     gameLayer.children.forEach(c=>c.destroy(true));
-    initTextures();    
+    initTextures();
     gameLayer.removeChildren();
     gameLayer.addChild(linkLayer);
     gameLayer.addChild(nodeLayer);

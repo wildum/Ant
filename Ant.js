@@ -2,8 +2,8 @@ var ANT_RADIUS = 5;
 var ANT_COLOR = 0xFF0000;
 var ANT_SPEED = 4;
 
-var PHEROMONE_STRENGTH = 1;
-var PHEROMONE_DECAY_RATE = 2e-4;
+var PHEROMONE_STRENGTH = 4;
+var PHEROMONE_DECAY_RATE = 5e-3;
 
 function getAntGraphics(r) {
     var sprite = new PIXI.Sprite(discTexture);
